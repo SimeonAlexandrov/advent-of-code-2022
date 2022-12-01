@@ -1,5 +1,5 @@
 pub mod solution {
-    pub fn hello_world() {
-        println!("Hello from solution1 module");
+    pub fn output(input: &String) {
+        println!("{input}")
     }
 }
