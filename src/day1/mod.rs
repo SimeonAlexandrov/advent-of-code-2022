@@ -13,7 +13,7 @@ pub mod solution {
         for cal in calories_vec.iter() {
             if *cal == -1 {
                 // Check if current elf is better than best
-                elf_with_most_calories = update_best_elf(*cal, elf_with_most_calories);
+                elf_with_most_calories = update_best_elf(current_elf, elf_with_most_calories);
                 current_elf = 0;
             } else {
                 current_elf += cal;
@@ -22,8 +22,7 @@ pub mod solution {
         // Check for last sum as well
         elf_with_most_calories = update_best_elf(current_elf, elf_with_most_calories);
 
-        println!("{:#?}", calories_vec);
-        println!("{elf_with_most_calories}")
+        println!("Result: {elf_with_most_calories}")
     }
 
     fn update_best_elf(current: i32, best: i32) -> i32 {
