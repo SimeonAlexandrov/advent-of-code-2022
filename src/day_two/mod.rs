@@ -28,11 +28,7 @@ pub mod part_one {
                 (Shape::Scissors, Shape::Scissors) => 3,
                 (Shape::Rock, Shape::Paper) => 6,
                 (Shape::Paper, Shape::Scissors) => 6,
-                (Shape::Scissors, Shape::Rock) => 3,
-                _ => panic!(
-                    "Unexpected shapes during battle opp:{:#?} me:{:#?}",
-                    &self.opponent.shape, &self.me.shape
-                ),
+                (Shape::Scissors, Shape::Rock) => 6,
             };
 
             battle_score + self.me.points
@@ -51,27 +47,32 @@ pub mod part_one {
         }
     }
 
-    fn match_shape_to_points(shape: &char) -> u8 {
+    fn match_shape_to_points(shape: &Shape) -> u8 {
         match shape {
-            'X' => 1, // Rock
-            'Y' => 2, // Paper
-            'Z' => 3, // Scissors
-            _ => 0,
+            Shape::Rock => 1,     // Rock
+            Shape::Paper => 2,    // Paper
+            Shape::Scissors => 3, // Scissors
         }
     }
 
     fn match_line_to_battle(line: &str) -> Battle {
         match line {
             _ => {
-                let hands: Vec<char> = line.split(' ').map(|s| s.chars().next().unwrap()).collect();
+                let mut lines_with_shapes = line
+                    .split(' ')
+                    .map(|s| s.chars().next().unwrap_or_default())
+                    .map(|ch| match_char_to_shape(&ch));
+
+                let opponent_shape = lines_with_shapes.next().unwrap();
+                let my_shape = lines_with_shapes.next().unwrap();
                 Battle {
                     opponent: Hand {
-                        shape: match_char_to_shape(&hands[0]),
+                        shape: opponent_shape,
                         points: 0, // We don't care for opponent points
                     },
                     me: Hand {
-                        shape: match_char_to_shape(&hands[0]),
-                        points: match_shape_to_points(&hands[1]),
+                        points: match_shape_to_points(&my_shape),
+                        shape: my_shape,
                     },
                 }
             }
@@ -82,6 +83,7 @@ pub mod part_one {
         let battles: Vec<Battle> = input.split("\n").map(|s| match_line_to_battle(s)).collect();
         println!("{:#?}", battles);
         let scores: Vec<u8> = battles.iter().map(|b| b.resolve_battle()).collect();
+        println!("Scores: {:#?}", scores);
         println!(
             "Result: {}",
             scores.iter().map(|&score| score as u32).sum::<u32>()
