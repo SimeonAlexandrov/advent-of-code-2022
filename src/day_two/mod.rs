@@ -200,7 +200,7 @@ pub mod part_two {
                 (Shape::Paper, ExpectedResult::Lose) => Shape::Rock,
                 (Shape::Scissors, ExpectedResult::Win) => Shape::Rock,
                 (Shape::Scissors, ExpectedResult::Draw) => Shape::Scissors,
-                (Shape::Scissors, ExpectedResult::Lose) => Shape::Scissors,
+                (Shape::Scissors, ExpectedResult::Lose) => Shape::Paper,
             }
         }
     }
@@ -216,8 +216,6 @@ pub mod part_two {
                     + Hand::resolve_points(&b.me.shape)
             })
             .collect();
-
-        println!("{:#?}", scores);
 
         println!("Scores: {:#?}", scores);
         println!(
