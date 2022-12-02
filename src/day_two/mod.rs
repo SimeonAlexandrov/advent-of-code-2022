@@ -1,5 +1,5 @@
 pub mod part_one {
-    #[derive(Debug)]
+    #[derive(Debug, Clone)]
     enum Shape {
         Rock,
         Paper,
@@ -47,7 +47,7 @@ pub mod part_one {
         }
     }
 
-    fn match_shape_to_points(shape: &Shape) -> u8 {
+    fn match_shape_to_points(shape: Shape) -> u8 {
         match shape {
             Shape::Rock => 1,     // Rock
             Shape::Paper => 2,    // Paper
@@ -71,8 +71,8 @@ pub mod part_one {
                         points: 0, // We don't care for opponent points
                     },
                     me: Hand {
-                        points: match_shape_to_points(&my_shape),
-                        shape: my_shape,
+                        shape: my_shape.clone(),
+                        points: match_shape_to_points(my_shape.clone()),
                     },
                 }
             }
