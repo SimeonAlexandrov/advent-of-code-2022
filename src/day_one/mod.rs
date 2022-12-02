@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub mod part_one {
     pub fn output(input: &String) {
         let calories_vec: Vec<i32> = input
@@ -34,6 +35,7 @@ pub mod part_one {
     }
 }
 
+#[allow(dead_code)]
 pub mod part_two {
     pub fn output(input: &String) {
         let calories_vec: Vec<i32> = input
