@@ -8,7 +8,7 @@ fn main() {
         "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_three/input/dummy-input.txt";
     let _filepath =
         "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_three/input/input.txt";
-    let data = input::read_file(_filepath_dummy);
+    let data = input::read_file(_filepath);
 
     // day_one::part_one::output(&data);
     // day_one::part_two::output(&data);
