@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+#[allow(dead_code)]
 pub mod part_one {
     use std::collections::HashMap;
     #[derive(Debug)]
@@ -63,7 +64,7 @@ pub mod part_one {
         println!("Result: {}", priorities.iter().sum::<i32>())
     }
 
-    fn match_priority(ch: char) -> i32 {
+    pub fn match_priority(ch: char) -> i32 {
         match ch {
             'a' => 1,
             'b' => 2,
@@ -185,7 +186,53 @@ pub mod part_one {
 }
 
 pub mod part_two {
+    use std::collections::HashMap;
+
+    use crate::day_three::part_one;
+
+    fn get_backpack_mapper(backpack: &String) -> HashMap<char, u8> {
+        let mut common_mapper: HashMap<char, u8> = HashMap::new();
+
+        for ch in backpack.chars() {
+            common_mapper
+                .entry(ch)
+                .and_modify(|counter| *counter += 1)
+                .or_insert(1);
+        }
+
+        return common_mapper;
+    }
+
     pub fn output(input: &String) {
-        println!("{}", input)
+        let backpacks: Vec<String> = input.split('\n').map(|s| String::from(s)).collect();
+
+        let groups = backpacks.chunks(3);
+
+        let mut badges: Vec<char> = Vec::new();
+
+        for group in groups {
+            let common_mapper0_keys: Vec<char> =
+                get_backpack_mapper(&group[0]).into_keys().collect();
+            let common_mapper1_keys: Vec<char> =
+                get_backpack_mapper(&group[1]).into_keys().collect();
+            let common_mapper2_keys: Vec<char> =
+                get_backpack_mapper(&group[2]).into_keys().collect();
+
+            for key in common_mapper0_keys {
+                if common_mapper1_keys.contains(&key) && common_mapper2_keys.contains(&key) {
+                    badges.push(key)
+                }
+            }
+        }
+
+        println!("Badges {:#?}", badges);
+
+        println!(
+            "Priority sum: {:#?}",
+            badges
+                .into_iter()
+                .map(|b| part_one::match_priority(b))
+                .sum::<i32>()
+        )
     }
 }
