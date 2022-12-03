@@ -16,5 +16,6 @@ fn main() {
     // day_two::part_one::output(&data);
     // day_two::part_two::output(&data);
 
-    day_three::part_one::output(&data);
+    // day_three::part_one::output(&data);
+    day_three::part_two::output(&data);
 }

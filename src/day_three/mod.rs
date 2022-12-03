@@ -183,3 +183,9 @@ pub mod part_one {
         }
     }
 }
+
+pub mod part_two {
+    pub fn output(input: &String) {
+        println!("{}", input)
+    }
+}
