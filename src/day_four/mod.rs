@@ -1,11 +1,8 @@
 pub mod assignment;
 pub mod part_one {
-    // use core::slice::Split
-    // use crate::day_four::assignment::Assignment;
-
     use crate::day_four::assignment::Assignment;
 
-    pub fn parse_str(s: &str) -> Assignment {
+    fn parse_str(s: &str) -> Assignment {
         let mut it = s.split('-');
         Assignment(
             it.next().unwrap().parse::<u8>().unwrap(),
@@ -41,5 +38,25 @@ pub mod part_one {
         }
 
         println!("Result: {}", contain_counter);
+    }
+}
+
+pub mod part_two {
+    use crate::day_four::part_one::get_assignments;
+
+    pub fn output(input: &String) {
+        let assignments_in_line = get_assignments(input);
+
+        let mut overlap_counter: u16 = 0;
+
+        for assignments in &assignments_in_line {
+            let first = assignments.0;
+            let second = assignments.1;
+            if first.overlaps(&second) || second.overlaps(&first) {
+                overlap_counter += 1;
+            }
+        }
+
+        println!("Result: {}", overlap_counter);
     }
 }
