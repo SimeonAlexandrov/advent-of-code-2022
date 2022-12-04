@@ -13,7 +13,7 @@ pub mod part_one {
         )
     }
 
-    pub fn output(input: &String) {
+    pub fn get_assignments(input: &String) -> Vec<(Assignment, Assignment)> {
         let assignments_in_line: Vec<(Assignment, Assignment)> = input
             .split('\n')
             .map(|line| {
@@ -24,6 +24,11 @@ pub mod part_one {
             })
             .map(|str_assignments| (parse_str(str_assignments.0), parse_str(str_assignments.1)))
             .collect();
+        return assignments_in_line;
+    }
+
+    pub fn output(input: &String) {
+        let assignments_in_line: Vec<(Assignment, Assignment)> = get_assignments(input);
 
         let mut contain_counter: u16 = 0;
 
