@@ -24,6 +24,17 @@ pub mod part_one {
             })
             .map(|str_assignments| (parse_str(str_assignments.0), parse_str(str_assignments.1)))
             .collect();
-        println!("{:#?}", assignments_in_line);
+
+        let mut contain_counter: u16 = 0;
+
+        for assignments in &assignments_in_line {
+            let first = assignments.0;
+            let second = assignments.1;
+            if first.contains(&second) || second.contains(&first) {
+                contain_counter += 1;
+            }
+        }
+
+        println!("Result: {}", contain_counter);
     }
 }

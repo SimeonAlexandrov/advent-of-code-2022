@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Assignment(pub u8, pub u8);
 
 impl Assignment {
