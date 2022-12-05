@@ -4,7 +4,7 @@ use crate::Environment;
 
 pub fn get_crates(env: Environment) -> Vec<Vec<char>> {
     match env {
-        Environment::Dummy => vec![vec!['N', 'Z'], vec!['M', 'C', 'D'], vec!['P']],
+        Environment::Dummy => vec![vec!['Z', 'N'], vec!['M', 'C', 'D'], vec!['P']],
         Environment::Submission => vec![
             vec!['H', 'B', 'V', 'W', 'N', 'M', 'L', 'P'],
             vec!['M', 'Q', 'H'],

@@ -1,8 +1,10 @@
 use regex::Regex;
+
+#[derive(Debug)]
 pub struct Command {
-    how_many: u8,
-    source: u8,
-    dest: u8,
+    pub how_many: usize,
+    pub source: usize,
+    pub dest: usize,
 }
 
 impl Command {
@@ -11,12 +13,10 @@ impl Command {
             Regex::new(r"^move ([0-9]|[1-9][0-9]) from ([0-9]|[1-9][0-9]) to ([0-9]|[1-9][0-9])")
                 .unwrap();
         let caps = re.captures(s).unwrap();
-        println!("{:#?}", caps);
-        println!("{}", caps.get(0).unwrap().as_str());
         Self {
-            how_many: caps.get(1).unwrap().as_str().parse::<u8>().unwrap(),
-            source: caps.get(2).unwrap().as_str().parse::<u8>().unwrap(),
-            dest: caps.get(3).unwrap().as_str().parse::<u8>().unwrap(),
+            how_many: caps.get(1).unwrap().as_str().parse::<usize>().unwrap(),
+            source: caps.get(2).unwrap().as_str().parse::<usize>().unwrap() - 1, // to use indexes
+            dest: caps.get(3).unwrap().as_str().parse::<usize>().unwrap() - 1,   // to use indexes
         }
     }
 }
@@ -35,8 +35,8 @@ mod tests {
 
         // Then
         assert_eq!(cmd.how_many, 1);
-        assert_eq!(cmd.source, 2);
-        assert_eq!(cmd.dest, 1);
+        assert_eq!(cmd.source, 1);
+        assert_eq!(cmd.dest, 0);
     }
 
     #[test]
@@ -49,8 +49,8 @@ mod tests {
 
         // Then
         assert_eq!(cmd.how_many, 3);
-        assert_eq!(cmd.source, 1);
-        assert_eq!(cmd.dest, 3);
+        assert_eq!(cmd.source, 0);
+        assert_eq!(cmd.dest, 2);
     }
 
     #[test]
@@ -63,8 +63,8 @@ mod tests {
 
         // Then
         assert_eq!(cmd.how_many, 11);
-        assert_eq!(cmd.source, 2);
-        assert_eq!(cmd.dest, 8);
+        assert_eq!(cmd.source, 1);
+        assert_eq!(cmd.dest, 7);
     }
 
     #[test]
@@ -77,7 +77,7 @@ mod tests {
 
         // Then
         assert_eq!(cmd.how_many, 15);
-        assert_eq!(cmd.source, 9);
-        assert_eq!(cmd.dest, 3);
+        assert_eq!(cmd.source, 8);
+        assert_eq!(cmd.dest, 2);
     }
 }

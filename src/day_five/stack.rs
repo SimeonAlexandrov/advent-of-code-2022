@@ -1,5 +1,6 @@
-struct Stack {
-    content: Vec<char>,
+#[derive(Debug)]
+pub struct Stack {
+    pub content: Vec<char>,
 }
 
 impl Stack {
