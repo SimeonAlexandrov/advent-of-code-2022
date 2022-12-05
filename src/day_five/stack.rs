@@ -24,7 +24,11 @@ impl Stack {
             panic!("Failed popping from empty or not long enough stack!");
         }
 
-        Some(self.content.drain(..how_many).collect())
+        Some(
+            self.content
+                .drain(self.content.len() - how_many..)
+                .collect(),
+        )
     }
 
     pub fn peek(self) -> Option<char> {
@@ -140,6 +144,21 @@ mod tests {
             assert_eq!(res, &['A', 'B']);
 
             assert_eq!(s.content, empty_vec);
+        }
+
+        #[test]
+        fn test_pop_v2_something_is_left() {
+            // Given
+            let mut s = Stack {
+                content: vec!['A', 'B', 'C'],
+            };
+            // When
+            let res = s.pop_v2(2).unwrap().clone();
+
+            // Then
+            assert_eq!(res, &['B', 'C']);
+
+            assert_eq!(s.content, vec!['A']);
         }
 
         #[test]

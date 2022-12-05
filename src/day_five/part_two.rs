@@ -4,7 +4,7 @@ pub fn output(input: &String, env: &Environment) {
     use crate::day_five::command::Command;
     use crate::day_five::crates;
     use crate::day_five::stack::Stack;
-    println!("{}", input);
+    // println!("{}", input);
     let mut stacks: Vec<Stack> = crates::get_crates(env)
         .iter()
         .map(|v| Stack {
@@ -18,15 +18,15 @@ pub fn output(input: &String, env: &Environment) {
     // println!("commands: {:#?}", commands);
 
     for cmd in commands.iter() {
-        for i in 0..cmd.how_many {
-            // Pop
-            let source_stack = stacks.get_mut(cmd.source).unwrap();
-            let top_value = source_stack.pop().unwrap();
+        // Pop
+        let source_stack = stacks.get_mut(cmd.source).unwrap();
+        let mut top_value = source_stack.pop_v2(cmd.how_many).unwrap();
 
-            // Push
-            let dest_stack = stacks.get_mut(cmd.dest).unwrap();
-            dest_stack.push(&top_value);
-        }
+        // Push
+        let dest_stack = stacks.get_mut(cmd.dest).unwrap();
+        dest_stack.push_v2(&mut top_value);
+
+        println!("{:#?}", stacks)
     }
 
     for st in stacks {

@@ -2,7 +2,7 @@ use std::vec;
 
 use crate::Environment;
 
-pub fn get_crates(env: Environment) -> Vec<Vec<char>> {
+pub fn get_crates(env: &Environment) -> Vec<Vec<char>> {
     match env {
         Environment::Dummy => vec![vec!['Z', 'N'], vec!['M', 'C', 'D'], vec!['P']],
         Environment::Submission => vec![

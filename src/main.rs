@@ -45,6 +45,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // day_four::part_one::output(&data);
     // day_four::part_two::output(&data);
 
-    day_five::part_one::output(&data, env);
+    // day_five::part_one::output(&data, &env);
+    day_five::part_two::output(&data, &env);
     Ok(())
 }
