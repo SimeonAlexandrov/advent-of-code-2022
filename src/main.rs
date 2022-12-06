@@ -5,9 +5,9 @@ mod input;
 // mod day_one;
 // mod day_two;
 // mod day_three;
-mod day_four;
-
-mod day_five;
+// mod day_four;
+// mod day_five;
+mod day_six;
 
 pub enum Environment {
     Dummy,
@@ -28,8 +28,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     let filepath = match env {
-        Environment::Dummy => "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_five/input/dummy-input.txt",
-        Environment::Submission => "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_five/input/input.txt"
+        Environment::Dummy => "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_six/input/dummy-input.txt",
+        Environment::Submission => "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_six/input/input.txt"
     };
     let data = input::read_file(filepath);
 
@@ -46,6 +46,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     // day_four::part_two::output(&data);
 
     // day_five::part_one::output(&data, &env);
-    day_five::part_two::output(&data, &env);
+    // day_five::part_two::output(&data, &env);
+
+    day_six::part_one::output(&data);
     Ok(())
 }
