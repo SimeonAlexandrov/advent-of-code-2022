@@ -28,7 +28,7 @@ fn calculate_tree_score(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) ->
         return 0;
     }
     let cell = forest[cell_y][cell_x];
-    println!("Cell: {}\ty:{}\tx:{}", cell, cell_y, cell_x);
+    // println!("Cell: {}\ty:{}\tx:{}", cell, cell_y, cell_x);
 
     let column = forest
         .iter()
@@ -60,14 +60,9 @@ fn count_above(cell: u32, column: &Vec<&u32>, cell_y: usize) -> i32 {
         if above_break_condition {
             break;
         }
-        if *j_cell <= &cell {
-            above_cnt += 1;
-        }
+        above_cnt += 1;
         if *j_cell >= &cell {
             above_break_condition = true;
-            if *j_cell > &cell && above_cnt == 0 {
-                above_cnt = 1;
-            }
         }
     }
     return above_cnt;
@@ -89,14 +84,9 @@ fn count_below(cell: u32, column: &Vec<&u32>, cell_y: usize, below_limit: usize)
         if below_break_condition {
             break;
         }
-        if *j_cell <= &cell {
-            below_cnt += 1;
-        }
+        below_cnt += 1;
         if *j_cell >= &cell {
             below_break_condition = true;
-            if *j_cell > &cell && below_cnt == 0 {
-                below_cnt = 1;
-            }
         }
     }
     // println!("below cnt: {}", below_cnt);
@@ -111,24 +101,19 @@ fn count_right(cell: u32, row: &&Vec<u32>, cell_x: usize, right_limit: usize) ->
     for i in (cell_x + 1)..=right_limit {
         right_from_cell.push(&row[i]);
     }
-    println!("right: {:#?}", right_from_cell);
+    // println!("right: {:#?}", right_from_cell);
 
     let mut right_break_condition = false;
     for (_, j_cell) in right_from_cell.iter().enumerate() {
         if right_break_condition {
             break;
         }
-        if *j_cell <= &cell {
-            right_cnt += 1;
-        }
+        right_cnt += 1;
         if *j_cell >= &cell {
             right_break_condition = true;
-            if *j_cell > &cell && right_cnt == 0 {
-                right_cnt = 1;
-            }
         }
     }
-    println!("right cnt: {}", right_cnt);
+    // println!("right cnt: {}", right_cnt);
     return right_cnt;
 }
 
@@ -147,14 +132,9 @@ fn count_left(cell: u32, row: &&Vec<u32>, cell_x: usize) -> i32 {
         if left_break_condition {
             break;
         }
-        if *j_cell <= &cell {
-            left_cnt += 1;
-        }
+        left_cnt += 1;
         if *j_cell >= &cell {
             left_break_condition = true;
-            if *j_cell > &cell && left_cnt == 0 {
-                left_cnt = 1;
-            }
         }
     }
     // println!("left cnt: {}", left_cnt);
