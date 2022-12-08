@@ -1,3 +1,4 @@
+use super::is_visible::is_visible;
 pub fn output(input: &String) {
     let forest: Vec<Vec<u32>> = input
         .split('\n')
@@ -6,6 +7,16 @@ pub fn output(input: &String) {
             row
         })
         .collect();
-}
 
-fn is_visible(forest: &Vec<Vec<u32>>, cell_x: usize, cell_y: usize) {}
+    let mut visible_count: u32 = 0;
+
+    for (i, row) in forest.iter().enumerate() {
+        for (j, cell) in row.iter().enumerate() {
+            if is_visible(&forest, i, j) {
+                visible_count += 1;
+            }
+        }
+    }
+
+    println!("Result {}", visible_count);
+}
