@@ -14,6 +14,8 @@ pub fn output(input: &String) {
         for (j, cell) in row.iter().enumerate() {
             if is_visible(&forest, i, j) {
                 visible_count += 1;
+            } else {
+                println!("Not visible cell: {} \n\tx={},\ty={}", cell, i, j);
             }
         }
     }
