@@ -1,6 +1,6 @@
 pub fn is_visible(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -> bool {
-    return is_visible_top_bottom(&forest, cell_y, cell_x)
-        || is_visible_left_right(&forest, cell_y, cell_x);
+    return is_visible_top_bottom(&forest, cell_y, cell_x);
+    // || is_visible_left_right(&forest, cell_y, cell_x);
 }
 
 fn is_visible_top_bottom(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -> bool {
@@ -13,28 +13,30 @@ fn is_visible_top_bottom(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -
             if x == lower_limit || y == lower_limit || x == right_limit || y == right_limit {
                 return true;
             }
-            let mut above_max = 0;
-            let mut below_max = 0;
+            let mut above_max: i32 = -1;
+            let mut below_max: i32 = -1;
 
             let column = forest
                 .iter()
                 .map(|row| row.iter().nth(cell_x).unwrap())
                 .collect::<Vec<&u32>>();
 
-            println!("Column: {:#?}", column);
+            // println!("Column: {:#?}", column);
 
             for (i, el) in column.iter().enumerate() {
-                if i < cell_y && **el > above_max {
-                    above_max = **el;
+                if i < cell_y && i32::try_from(**el).ok().unwrap() > above_max {
+                    above_max = i32::try_from(**el).ok().unwrap();
                 }
 
-                if i > cell_y && **el > below_max {
-                    below_max = **el;
+                if i > cell_y && i32::try_from(**el).ok().unwrap() > below_max {
+                    below_max = i32::try_from(**el).ok().unwrap();
                 }
             }
 
-            println!("above_max: {}\tbelow_max={}", above_max, below_max);
-            if above_max >= forest[cell_y][cell_x] && below_max >= forest[cell_y][cell_x] {
+            // println!("above_max: {}\tbelow_max={}", above_max, below_max);
+            if above_max >= forest[cell_y][cell_x].try_into().unwrap()
+                && below_max >= forest[cell_y][cell_x].try_into().unwrap()
+            {
                 return false;
             }
             true
@@ -60,17 +62,19 @@ fn is_visible_left_right(forest: &Vec<Vec<u32>>, cell_x: usize, cell_y: usize) -
             println!("Row: {:#?}", row);
 
             for (i, el) in row.iter().enumerate() {
-                if i < cell_x && *el > left_max {
-                    left_max = *el;
+                if i < cell_x && i32::try_from(*el).ok().unwrap() > left_max {
+                    left_max = i32::try_from(*el).ok().unwrap();
                 }
 
-                if i > cell_x && *el > right_max {
-                    right_max = *el;
+                if i > cell_x && i32::try_from(*el).ok().unwrap() > right_max {
+                    right_max = i32::try_from(*el).ok().unwrap();
                 }
             }
 
             println!("left_max: {}\tright_max={}", left_max, right_max);
-            if left_max >= forest[cell_y][cell_x] && right_max >= forest[cell_y][cell_x] {
+            if left_max >= forest[cell_y][cell_x].try_into().unwrap()
+                && right_max >= forest[cell_y][cell_x].try_into().unwrap()
+            {
                 return false;
             }
             true
@@ -154,7 +158,7 @@ mod tests {
                 vec![0, 6, 0, 0],
             ];
             // When
-            println!("{}", forest[2][1]);
+            // println!("{}", forest[2][1]);
             let is_visible = is_visible_top_bottom(&forest, 2, 1);
             // Then
             assert_eq!(is_visible, false);
@@ -170,7 +174,7 @@ mod tests {
                 vec![0, 6, 0, 0],
             ];
             // When
-            println!("{}", forest[2][1]);
+            // println!("{}", forest[2][1]);
             let is_visible = is_visible_top_bottom(&forest, 1, 1);
             // Then
             assert_eq!(is_visible, false);
@@ -186,7 +190,7 @@ mod tests {
                 vec![0, 6, 0, 0],
             ];
             // When
-            println!("{}", forest[2][2]);
+            // println!("{}", forest[2][2]);
             let is_visible = is_visible_left_right(&forest, 2, 2);
             // Then
             assert_eq!(is_visible, false);
@@ -236,6 +240,36 @@ mod tests {
             ];
             // When
             let is_visible = is_visible(&forest, 2, 1);
+            // Then
+            assert_eq!(is_visible, false);
+        }
+
+        #[test]
+        fn test_is_visible_from_input() {
+            // Given
+            let forest = vec![
+                vec![2, 3, 2, 2],
+                vec![0, 0, 1, 2],
+                vec![2, 0, 0, 0],
+                vec![0, 1, 2, 0],
+            ];
+            // When
+            let is_visible = is_visible(&forest, 2, 2);
+            // Then
+            assert_eq!(is_visible, false);
+        }
+
+        #[test]
+        fn test_is_visible_from_input_left_right() {
+            // Given
+            let forest = vec![
+                vec![2, 3, 2, 2],
+                vec![0, 0, 1, 2],
+                vec![2, 0, 0, 0],
+                vec![0, 1, 2, 0],
+            ];
+            // When
+            let is_visible = is_visible_left_right(&forest, 2, 2);
             // Then
             assert_eq!(is_visible, false);
         }
