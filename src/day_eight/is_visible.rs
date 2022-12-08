@@ -1,6 +1,10 @@
 pub fn is_visible(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -> bool {
-    return is_visible_top_bottom(&forest, cell_y, cell_x);
-    // || is_visible_left_right(&forest, cell_y, cell_x);
+    let top_bottom = is_visible_top_bottom(&forest, cell_y, cell_x);
+    let left_right = is_visible_left_right(&forest, cell_y, cell_x);
+    if cell_y == 52 && cell_x == 3 {
+        println!("top_bottom: {}\t left_right: {}", top_bottom, left_right);
+    }
+    return top_bottom || left_right;
 }
 
 fn is_visible_top_bottom(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -> bool {
@@ -37,14 +41,20 @@ fn is_visible_top_bottom(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -
             if above_max >= forest[cell_y][cell_x].try_into().unwrap()
                 && below_max >= forest[cell_y][cell_x].try_into().unwrap()
             {
+                if cell_y == 52 && cell_x == 3 {
+                    println!("TB NOT Visible!");
+                }
                 return false;
+            }
+            if cell_y == 52 && cell_x == 3 {
+                println!("TB Visible!");
             }
             true
         }
     }
 }
 
-fn is_visible_left_right(forest: &Vec<Vec<u32>>, cell_x: usize, cell_y: usize) -> bool {
+fn is_visible_left_right(forest: &Vec<Vec<u32>>, cell_y: usize, cell_x: usize) -> bool {
     let lower_limit = forest.len() - 1;
     let right_limit = forest[0].len() - 1;
     match (cell_y, cell_x) {
@@ -57,27 +67,56 @@ fn is_visible_left_right(forest: &Vec<Vec<u32>>, cell_x: usize, cell_y: usize) -
             let mut left_max = 0;
             let mut right_max = 0;
 
+            if cell_y == 52 && cell_x == 3 {
+                println!("cell: {}", forest[cell_y][cell_x]);
+            }
+
             let row = forest.iter().nth(cell_y).unwrap();
 
-            println!("Row: {:#?}", row);
+            // println!("Row: {:#?}", row);
 
             for (i, el) in row.iter().enumerate() {
                 if i < cell_x && i32::try_from(*el).ok().unwrap() > left_max {
+                    if cell_y == 52 && cell_x == 3 {
+                        println!("Left max: {}", left_max);
+                        println!("Element left of 5: {}", i32::try_from(*el).ok().unwrap());
+                    }
                     left_max = i32::try_from(*el).ok().unwrap();
                 }
 
                 if i > cell_x && i32::try_from(*el).ok().unwrap() > right_max {
+                    if cell_y == 52 && cell_x == 3 {
+                        // println!("Right max: {}", right_max);
+                        // println!("Element right of 5: {}", i32::try_from(*el).ok().unwrap());
+                    }
                     right_max = i32::try_from(*el).ok().unwrap();
                 }
             }
-
-            println!("left_max: {}\tright_max={}", left_max, right_max);
-            if left_max >= forest[cell_y][cell_x].try_into().unwrap()
-                && right_max >= forest[cell_y][cell_x].try_into().unwrap()
-            {
+            if cell_y == 52 && cell_x == 3 {
+                let tmp: i32 = forest[cell_y][cell_x].try_into().unwrap();
+                println!("left_max: {}\t{}\tright_max={}", left_max, tmp, right_max);
+                println!(
+                    "left_max: {}\t>\ttmp={}\t{}",
+                    left_max,
+                    tmp,
+                    left_max >= tmp
+                );
+            }
+            let is_not_visible_from_the_left =
+                left_max >= forest[cell_y][cell_x].try_into().unwrap();
+            let is_not_visible_from_the_right =
+                right_max >= forest[cell_y][cell_x].try_into().unwrap();
+            if is_not_visible_from_the_left && is_not_visible_from_the_right {
+                if cell_y == 52 && cell_x == 3 {
+                    println!("LR Not Visible!");
+                }
                 return false;
             }
-            true
+
+            if cell_y == 52 && cell_x == 3 {
+                println!("LR Visible!");
+            }
+            return true;
         }
     }
 }

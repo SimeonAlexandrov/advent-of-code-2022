@@ -15,7 +15,10 @@ pub fn output(input: &String) {
             if is_visible(&forest, i, j) {
                 visible_count += 1;
             } else {
-                println!("Not visible cell: {} \n\tx={},\ty={}", cell, i, j);
+                // println!("Not visible cell: {} \n\ty={},\tx={}", cell, i, j);
+                if i == 52 && j == 3 {
+                    println!("Not visible cell: {} \n\ty={},\tx={}", cell, i, j);
+                }
             }
         }
     }
