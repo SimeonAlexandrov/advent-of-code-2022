@@ -1,0 +1,1 @@
+I got stuck with this task and especially Rc, RefCell and borrowing so I followed this tutorial. https://www.youtube.com/watch?v=ajf7DfqeIQY 

@@ -1,86 +1,74 @@
-// We need some common trait for Dir and File getSize
-// It's going to be implemented recursively for Dirs
-
-use std::cell::Cell;
-
-use regex::Regex;
-
-enum NodeType {
-    File,
-    Dir,
-}
-
-struct Node<'a> {
+use std::cell::RefCell;
+use std::{collections::HashMap, rc::Rc};
+#[derive(Default)]
+struct Dir {
     name: String,
-    node_type: NodeType,
-    size: Cell<u32>,
-    parent: Option<Box<&'a Node<'a>>>,
-    children: Vec<Box<Node<'a>>>,
+    size: RefCell<usize>,
+    parent: Option<Rc<Dir>>,
+    subdir: RefCell<HashMap<String, Rc<Dir>>>,
 }
 
-impl<'a> Node<'a> {
-    fn register_child(&mut self, child: Box<Node<'a>>) {
-        self.children.push(child);
+impl Dir {
+    fn get_size(&self) -> usize {
+        *self.size.borrow()
+            + self
+                .subdir
+                .borrow()
+                .values()
+                .fold(0, |a, b| a + b.get_size())
     }
 }
 
 pub fn output(input: &String) {
-    let input_iter = input.split('\n');
-
-    let mut root = Node {
-        name: String::from('/'),
-        node_type: NodeType::Dir,
-        size: Cell::new(0),
+    println!("{input}");
+    let root = Rc::new(Dir {
+        name: String::from("/"),
+        size: RefCell::new(0),
         parent: None,
-        children: vec![],
-    };
+        subdir: RefCell::new(HashMap::new()),
+    });
+    let mut cwd = Rc::clone(&root);
+    for line in input.split('\n') {
+        let words = line.split(' ').collect::<Vec<&str>>();
+        match (words[0], words[1]) {
+            ("$", "ls") => {}
+            ("$", "cd") => match words[2] {
+                "/" => cwd = Rc::clone(&root),
+                ".." => cwd = Rc::clone(&cwd.parent.as_ref().unwrap()),
+                dirname => {
+                    let newdir = cwd.subdir.borrow().get(dirname).unwrap().clone();
+                    cwd = Rc::clone(&newdir);
+                }
+            },
+            ("dir", dirname) => {
+                cwd.subdir.borrow_mut().insert(
+                    dirname.to_string(),
+                    Rc::new(Dir {
+                        name: dirname.to_string(),
+                        size: RefCell::new(0),
+                        parent: Some(Rc::clone(&cwd)),
+                        subdir: RefCell::new(HashMap::new()),
+                    }),
+                );
+            }
 
-    let mut a = Node {
-        name: String::from('a'),
-        node_type: NodeType::Dir,
-        size: Cell::new(0),
-        parent: Some(Box::new(&root)),
-        children: vec![],
-    };
-
-    root.register_child(Box::new(a));
-
-    for line in input_iter {
-        parse_line(line);
-    }
-}
-
-pub fn parse_line(line: &str) {
-    let cd_regex = Regex::new("^\\$ cd ([a-z]*)").unwrap();
-    let ls_regex = Regex::new("^\\$ ls").unwrap();
-    let file_regex = Regex::new("^([0-9]*) (([a-z]*).[a-z]*|([a-z]*))").unwrap();
-    let dir_regex = Regex::new("^dir ([a-z]*)").unwrap();
-
-    if cd_regex.is_match(line) {
-        let caps = cd_regex.captures(line).unwrap();
-        println!("cd target: {:#?}", caps.get(1).unwrap().as_str());
-    }
-
-    if ls_regex.is_match(line) {
-        println!("ls found: {}", line);
-    }
-
-    if file_regex.is_match(line) {
-        let caps = file_regex.captures(line).unwrap();
-        println!(
-            "original line: {:#?} \n\tfile size: {:#?}  \n\tfile_name: {:#?}",
-            line,
-            caps.get(1).unwrap().as_str(),
-            caps.get(2).unwrap().as_str()
-        );
+            (size, name) => {
+                *cwd.size.borrow_mut() += size.parse::<usize>().unwrap();
+            }
+        }
     }
 
-    if dir_regex.is_match(line) {
-        let caps = dir_regex.captures(line).unwrap();
-        println!(
-            "original line: {} \n\tdir_name: {:#?}",
-            line,
-            caps.get(1).unwrap().as_str()
-        );
+    let mut to_visit = vec![Rc::clone(&root)];
+    let mut total = 0;
+    while let Some(dir) = to_visit.pop() {
+        for d in dir.subdir.borrow().values() {
+            to_visit.push(Rc::clone(d));
+        }
+
+        let size = dir.get_size();
+        if size <= 100000 {
+            total += size;
+        }
     }
+    println!("Total: {total}")
 }
