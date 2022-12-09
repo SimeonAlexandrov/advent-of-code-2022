@@ -1,10 +1,49 @@
 // We need some common trait for Dir and File getSize
 // It's going to be implemented recursively for Dirs
 
+use std::cell::Cell;
+
 use regex::Regex;
+
+enum NodeType {
+    File,
+    Dir,
+}
+
+struct Node<'a> {
+    name: String,
+    node_type: NodeType,
+    size: Cell<u32>,
+    parent: Option<Box<&'a Node<'a>>>,
+    children: Vec<Box<Node<'a>>>,
+}
+
+impl<'a> Node<'a> {
+    fn register_child(&mut self, child: Box<Node<'a>>) {
+        self.children.push(child);
+    }
+}
 
 pub fn output(input: &String) {
     let input_iter = input.split('\n');
+
+    let mut root = Node {
+        name: String::from('/'),
+        node_type: NodeType::Dir,
+        size: Cell::new(0),
+        parent: None,
+        children: vec![],
+    };
+
+    let mut a = Node {
+        name: String::from('a'),
+        node_type: NodeType::Dir,
+        size: Cell::new(0),
+        parent: Some(Box::new(&root)),
+        children: vec![],
+    };
+
+    root.register_child(Box::new(a));
 
     for line in input_iter {
         parse_line(line);
