@@ -34,7 +34,7 @@ pub fn output(input: &String) {
             ("$", "ls") => {}
             ("$", "cd") => match words[2] {
                 "/" => cwd = Rc::clone(&root),
-                ".." => cwd = Rc::clone(&cwd.parent.as_ref().unwrap()),
+                ".." => cwd = Rc::clone(cwd.parent.as_ref().unwrap()),
                 dirname => {
                     let newdir = cwd.subdir.borrow().get(dirname).unwrap().clone();
                     cwd = Rc::clone(&newdir);
@@ -60,6 +60,9 @@ pub fn output(input: &String) {
 
     let mut to_visit = vec![Rc::clone(&root)];
     let mut total = 0;
+    let max_size = 70000000;
+    let mut min_acceptable_dir_size = max_size;
+    let total_size_root = root.get_size();
     while let Some(dir) = to_visit.pop() {
         for d in dir.subdir.borrow().values() {
             to_visit.push(Rc::clone(d));
@@ -69,6 +72,13 @@ pub fn output(input: &String) {
         if size <= 100000 {
             total += size;
         }
+
+        if (max_size - total_size_root + size) > 30000000 && size < min_acceptable_dir_size {
+            min_acceptable_dir_size = size;
+        }
     }
-    println!("Total: {total}")
+    println!("Total: {total}");
+
+    // println!("Total size root: {}", total_size_root);
+    println!("Min acceptable dir size {}", min_acceptable_dir_size);
 }
