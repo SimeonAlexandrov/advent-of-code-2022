@@ -65,6 +65,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // day_nine::part_one::output(&data);
 
-    day_10::part_one::output(&data);
+    // day_10::part_one::output(&data);
+    day_10::part_two::output(&data);
     Ok(())
 }

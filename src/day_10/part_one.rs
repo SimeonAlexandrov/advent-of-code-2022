@@ -1,5 +1,3 @@
-use crate::input;
-
 pub fn output(input: &String) {
     let input_iter = input.lines();
 
