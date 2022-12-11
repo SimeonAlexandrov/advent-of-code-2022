@@ -12,6 +12,7 @@ mod input;
 // mod day_eight;
 // mod day_nine;
 mod day_10;
+mod day_11;
 
 pub enum Environment {
     Dummy,
@@ -66,6 +67,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     // day_nine::part_one::output(&data);
 
     // day_10::part_one::output(&data);
-    day_10::part_two::output(&data);
+    // day_10::part_two::output(&data);
+
+    day_11::part_one::output(&data);
     Ok(())
 }
