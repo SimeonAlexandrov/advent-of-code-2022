@@ -34,10 +34,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let filepath = match env {
         Environment::Dummy => {
-            "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_10/input/dummy-input.txt"
+            "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_11/input/dummy-input.txt"
         }
         Environment::Submission => {
-            "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_10/input/input.txt"
+            "/Users/simeon.aleksandrov/Workspace/Learning/aoc-2022/src/day_11/input/input.txt"
         }
     };
     let data = input::read_file(filepath);

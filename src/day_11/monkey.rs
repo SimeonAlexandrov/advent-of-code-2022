@@ -1,19 +1,39 @@
+use std::cell::RefCell;
+
+#[derive(Debug)]
+pub enum Op {
+    Add,
+    Multiply,
+}
+#[derive(Debug)]
+pub enum Operand {
+    Old,
+    Num(usize),
+}
+#[derive(Debug)]
 pub struct Monkey {
-    id: usize,
-    starting_items: Vec<usize>,
-    items_inspected_cnt: usize
+    pub id: usize,
+    pub starting_items: Vec<usize>,
+    pub items_inspected_cnt: usize,
+    pub operation: Option<Op>,
+    pub operand: Option<Operand>,
 }
 
 impl Monkey {
-    fn operation(&self, old: &usize, op: &char, operand: &usize) -> usize {
+    fn operation(&self, old: &usize, op: Op, operand: Operand) -> usize {
         match op {
-            '+' => old + operand,
-            '*' => old * operand,
-            _ => panic!("Unknown operation!"),
+            Op::Add => match operand {
+                Operand::Old => old + old,
+                Operand::Num(to_add) => old + to_add,
+            },
+            Op::Multiply => match operand {
+                Operand::Old => old * old,
+                Operand::Num(to_mul) => old * to_mul,
+            },
         }
     }
 
-    fn test(&self, item: &usize, operand: &usize) -> {
+    fn test(&self, item: &usize, operand: &usize) -> bool {
         item % operand == 0
     }
 
