@@ -1,6 +1,7 @@
 use std::{
     borrow::{Borrow, BorrowMut},
     cell::RefCell,
+    collections::{HashMap, HashSet},
     rc::Rc,
 };
 
@@ -12,7 +13,7 @@ pub fn output(input: &String) {
 
     let lines = input.lines();
 
-    let mut monkeys: Vec<Box<Monkey>> = vec![];
+    let mut monkeys: Vec<&Monkey> = vec![];
 
     let mut current_monkey: Option<Box<Monkey>> = None;
 
@@ -41,6 +42,7 @@ pub fn output(input: &String) {
                     false_target: None,
                 });
                 current_monkey = Some(new_monkey);
+                // monkeys.push(current_monkey.as_ref().unwrap());
                 println!("New monkey: {:#?}", &current_monkey);
             }
             "" => match words[2] {
@@ -116,10 +118,10 @@ pub fn output(input: &String) {
                 panic!("Unknown word!")
             }
         }
-        match current_monkey.as_mut() {
-            Some(monkey) => monkeys.push(monkey.clone()),
-            None => println!("Current monkey is not set!"),
-        }
+        // match monkeys.get_mut(current_monkey.as_ref().unwrap().id) {
+        //     Some(monkey) => *monkey = current_monkey.as_ref().unwrap(),
+        //     None => monkeys.push(current_monkey.as_ref().unwrap()),
+        // }
     }
     println!("Monkeys: {:#?}", &monkeys)
 
