@@ -1,22 +1,25 @@
 use std::cell::RefCell;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Op {
     Add,
     Multiply,
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Operand {
     Old,
     Num(usize),
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Monkey {
     pub id: usize,
     pub starting_items: Vec<usize>,
     pub items_inspected_cnt: usize,
     pub operation: Option<Op>,
     pub operand: Option<Operand>,
+    pub divisor: Option<usize>,
+    pub true_target: Option<usize>,
+    pub false_target: Option<usize>,
 }
 
 impl Monkey {
@@ -33,8 +36,8 @@ impl Monkey {
         }
     }
 
-    fn test(&self, item: &usize, operand: &usize) -> bool {
-        item % operand == 0
+    fn test(&self, item: &usize) -> bool {
+        item % self.divisor.unwrap() == 0
     }
 
     fn relieve_worry_level(&self, item: &usize) -> usize {

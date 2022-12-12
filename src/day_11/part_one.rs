@@ -12,16 +12,19 @@ pub fn output(input: &String) {
 
     let lines = input.lines();
 
-    let monkeys: Vec<Monkey> = vec![];
+    let mut monkeys: Vec<Box<Monkey>> = vec![];
 
     let mut current_monkey: Option<Box<Monkey>> = None;
 
     for line in lines {
         let words = line.split(" ").collect::<Vec<&str>>();
         println!("{:#?}", words);
+        if line.len() == 0 {
+            continue;
+        }
         match words[0] {
             "Monkey" => {
-                let mut new_monkey = Box::from(Monkey {
+                let new_monkey = Box::from(Monkey {
                     id: words[1]
                         .split(":")
                         .collect::<Vec<&str>>()
@@ -33,6 +36,9 @@ pub fn output(input: &String) {
                     items_inspected_cnt: 0,
                     operation: None,
                     operand: None,
+                    divisor: None,
+                    true_target: None,
+                    false_target: None,
                 });
                 current_monkey = Some(new_monkey);
                 println!("New monkey: {:#?}", &current_monkey);
@@ -49,10 +55,8 @@ pub fn output(input: &String) {
                         let parsed = without_comma_item.parse::<usize>().unwrap();
 
                         match current_monkey.as_mut() {
-                            Option::Some(current_monkey) => {
-                                current_monkey.starting_items.push(parsed)
-                            }
-                            Option::None => panic!("Current monkey is not set!"),
+                            Some(current_monkey) => current_monkey.starting_items.push(parsed),
+                            None => panic!("Current monkey is not set!"),
                         }
                     }
                     println!("Current monkey: {:#?}", &current_monkey);
@@ -78,6 +82,31 @@ pub fn output(input: &String) {
                     };
                     println!("Current monkey: {:#?}", &current_monkey);
                 }
+                "Test:" => match current_monkey.as_mut() {
+                    Some(current_monkey) => match words[5] {
+                        num => current_monkey.divisor = Some(num.parse::<usize>().unwrap()),
+                    },
+                    None => println!("Current monkey is not set!"),
+                },
+                "" => {
+                    match current_monkey.as_mut() {
+                        Some(current_monkey) => match words[5] {
+                            "true:" => {
+                                current_monkey.true_target =
+                                    Some(words[9].parse::<usize>().unwrap())
+                            }
+                            "false:" => {
+                                current_monkey.false_target =
+                                    Some(words[9].parse::<usize>().unwrap())
+                            }
+                            unknown => {
+                                panic!("Unknown word in indented line! {unknown}")
+                            }
+                        },
+                        None => println!("Current monkey is not set!"),
+                    };
+                    println!("Current monkey: {:#?}", &current_monkey);
+                }
                 unknown => {
                     panic!("Unknown word in indented line! {unknown}")
                 }
@@ -87,7 +116,12 @@ pub fn output(input: &String) {
                 panic!("Unknown word!")
             }
         }
+        match current_monkey.as_mut() {
+            Some(monkey) => monkeys.push(monkey.clone()),
+            None => println!("Current monkey is not set!"),
+        }
     }
+    println!("Monkeys: {:#?}", &monkeys)
 
     // Monkey's turn:
     // - inspect
