@@ -13,7 +13,7 @@ pub fn output(input: &String) {
 
     let lines = input.lines();
 
-    let mut monkeys: Vec<&Monkey> = vec![];
+    let mut monkeys: Vec<Option<Monkey>> = vec![];
 
     let mut current_monkey: Option<Box<Monkey>> = None;
 
@@ -92,14 +92,13 @@ pub fn output(input: &String) {
                 },
                 "" => {
                     match current_monkey.as_mut() {
-                        Some(current_monkey) => match words[5] {
+                        Some(c_monkey) => match words[5] {
                             "true:" => {
-                                current_monkey.true_target =
-                                    Some(words[9].parse::<usize>().unwrap())
+                                c_monkey.true_target = Some(words[9].parse::<usize>().unwrap())
                             }
                             "false:" => {
-                                current_monkey.false_target =
-                                    Some(words[9].parse::<usize>().unwrap())
+                                c_monkey.false_target = Some(words[9].parse::<usize>().unwrap());
+                                monkeys.push(Some(*c_monkey.clone()))
                             }
                             unknown => {
                                 panic!("Unknown word in indented line! {unknown}")
@@ -107,7 +106,7 @@ pub fn output(input: &String) {
                         },
                         None => println!("Current monkey is not set!"),
                     };
-                    println!("Current monkey: {:#?}", &current_monkey);
+                    println!("Current monkey: {:#?}", current_monkey.borrow_mut());
                 }
                 unknown => {
                     panic!("Unknown word in indented line! {unknown}")
