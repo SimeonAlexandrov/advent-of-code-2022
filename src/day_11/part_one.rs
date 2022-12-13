@@ -38,7 +38,7 @@ pub fn output(input: &String) {
                 }));
                 current_monkey = Rc::clone(&new_monkey);
                 // monkeys.push(current_monkey.as_ref().unwrap());
-                println!("New monkey: {:#?}", &current_monkey);
+                // println!("New monkey: {:#?}", &current_monkey);
             }
             "" => match words[2] {
                 "Starting" => {
@@ -53,7 +53,7 @@ pub fn output(input: &String) {
 
                         (*current_monkey).borrow_mut().starting_items.push(parsed)
                     }
-                    println!("Current monkey: {:#?}", &current_monkey);
+                    // println!("Current monkey: {:#?}", &current_monkey);
                 }
                 "Operation:" => {
                     match words[6] {
@@ -68,7 +68,7 @@ pub fn output(input: &String) {
                                 Operand::Num(other.parse::<usize>().unwrap())
                         }
                     };
-                    println!("Current monkey: {:#?}", &current_monkey);
+                    // println!("Current monkey: {:#?}", &current_monkey);
                 }
                 "Test:" => match words[5] {
                     num => {
@@ -90,7 +90,7 @@ pub fn output(input: &String) {
                             panic!("Unknown word in indented line! {unknown}")
                         }
                     };
-                    println!("Current monkey: {:#?}", (*current_monkey).borrow());
+                    // println!("Current monkey: {:#?}", (*current_monkey).borrow());
                 }
                 _ => {
                     println!("{:#?}", words);
@@ -104,29 +104,33 @@ pub fn output(input: &String) {
         }
     }
     println!("Monkeys: {:#?}", &monkeys);
+
+    for monkey in monkeys {
+        for item in &(*monkey).borrow().starting_items {
+            let mut worry_level = (*monkey).borrow().perform_op(&item);
+            println!("New worry level: {}", worry_level);
+
+            // Relieve stress
+            worry_level = (*monkey).borrow().relieve_worry_level(worry_level);
+            println!("New worry level after relieved stress: {}", worry_level);
+
+            // Test item
+            if (*monkey).borrow().test(worry_level) {
+                println!(
+                    "Need to pass {} to monkey {:?}",
+                    worry_level,
+                    (*monkey).borrow().true_target.unwrap()
+                );
+            }
+            println!(
+                "Need to pass {} to monkey {:?}",
+                worry_level,
+                (*monkey).borrow().false_target.unwrap()
+            );
+        }
+    }
 }
 
-// for monkey in monkeys {
-//     for item in &monkey.as_ref().unwrap().starting_items {
-//         let mut worry_level = monkey.as_ref().unwrap().perform_op(&item);
-//         println!("New worry level: {}", worry_level);
-
-//         // Relieve stress
-//         worry_level = monkey.as_ref().unwrap().relieve_worry_level(worry_level);
-//         println!("New worry level after relieved stress: {}", worry_level);
-
-//         // Test item
-//         if monkey.as_ref().unwrap().test(worry_level) {
-//             monkeys
-//                 .get_mut(monkey.as_ref().unwrap().true_target.unwrap())
-//                 .unwrap()
-//                 .as_mut()
-//                 .unwrap()
-//                 .starting_items
-//                 .push(worry_level);
-//         }
-//     }
-// }
 // Monkey's turn:
 // - inspect
 // - throw all items left to right
