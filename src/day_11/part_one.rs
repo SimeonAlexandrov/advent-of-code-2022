@@ -70,35 +70,40 @@ pub fn output(input: &String) {
                     };
                     println!("Current monkey: {:#?}", &current_monkey);
                 }
-                _ => panic!("Unknown word!"),
+                "Test:" => match words[5] {
+                    num => {
+                        (*current_monkey).borrow_mut().divisor = Some(num.parse::<usize>().unwrap())
+                    }
+                },
+                "" => {
+                    match words[5] {
+                        "true:" => {
+                            (*current_monkey).borrow_mut().true_target =
+                                Some(words[9].parse::<usize>().unwrap())
+                        }
+                        "false:" => {
+                            (*current_monkey).borrow_mut().false_target =
+                                Some(words[9].parse::<usize>().unwrap());
+                            monkeys.push(Rc::clone(&current_monkey))
+                        }
+                        unknown => {
+                            panic!("Unknown word in indented line! {unknown}")
+                        }
+                    };
+                    println!("Current monkey: {:#?}", (*current_monkey).borrow());
+                }
+                _ => {
+                    println!("{:#?}", words);
+                    panic!("Unknown indented word!")
+                }
             },
-            "Test:" => match words[5] {
-                num => (*current_monkey).borrow_mut().divisor = Some(num.parse::<usize>().unwrap()),
-            },
-            "" => {
-                match words[5] {
-                    "true:" => {
-                        (*current_monkey).borrow_mut().true_target =
-                            Some(words[9].parse::<usize>().unwrap())
-                    }
-                    "false:" => {
-                        (*current_monkey).borrow_mut().false_target =
-                            Some(words[9].parse::<usize>().unwrap());
-                        monkeys.push(Rc::clone(&current_monkey))
-                    }
-                    unknown => {
-                        panic!("Unknown word in indented line! {unknown}")
-                    }
-                };
-                println!("Current monkey: {:#?}", (*current_monkey).borrow());
-            }
             _ => {
                 println!("{:#?}", words);
                 panic!("Unknown word!")
             }
         }
     }
-    println!("Monkeys: {:?}", &monkeys);
+    println!("Monkeys: {:#?}", &monkeys);
 }
 
 // for monkey in monkeys {
