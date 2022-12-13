@@ -105,9 +105,14 @@ pub fn output(input: &String) {
     }
     println!("Monkeys: {:#?}", &monkeys);
 
-    for monkey in monkeys {
-        for item in &(*monkey).borrow().starting_items {
-            let mut worry_level = (*monkey).borrow().perform_op(&item);
+    for monkey in &monkeys {
+        println!(
+            "Monkey {} starting items before round: {:?}",
+            (*monkey).borrow().id,
+            (*monkey).borrow().starting_items
+        );
+        (*monkey).borrow().starting_items.iter().for_each(|item| {
+            let mut worry_level = (*monkey).borrow().perform_op(item);
             println!("New worry level: {}", worry_level);
 
             // Relieve stress
@@ -116,18 +121,26 @@ pub fn output(input: &String) {
 
             // Test item
             if (*monkey).borrow().test(worry_level) {
-                println!(
-                    "Need to pass {} to monkey {:?}",
-                    worry_level,
-                    (*monkey).borrow().true_target.unwrap()
-                );
+                let target_id = (*monkey).borrow().true_target.unwrap();
+                println!("Need to pass {} to monkey {:?}", worry_level, target_id);
+                monkeys[target_id]
+                    .borrow_mut()
+                    .starting_items
+                    .push(worry_level)
             }
+            let target_id = (*monkey).borrow().true_target.unwrap();
             println!(
                 "Need to pass {} to monkey {:?}",
                 worry_level,
                 (*monkey).borrow().false_target.unwrap()
             );
-        }
+
+            monkeys[target_id]
+                .borrow_mut()
+                .starting_items
+                .push(worry_level)
+            // We always want to clear item from monkey inventory after we are done with it
+        });
     }
 }
 
