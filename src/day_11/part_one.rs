@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 use crate::day_11::monkey::{Op, Operand};
 
@@ -104,14 +104,27 @@ pub fn output(input: &String) {
         }
     }
     println!("Monkeys: {:#?}", &monkeys);
+
+    let mut inspected_items: HashMap<usize, usize> = HashMap::new();
+
     for i in 0..20 {
         for monkey in &monkeys {
+            inspected_items
+                .entry((*monkey).borrow().id)
+                .and_modify(|e| *e += 1)
+                .or_insert(1);
             println!(
                 "Monkey {} starting items before round: {:?}",
                 (*monkey).borrow().id,
                 (*monkey).borrow().starting_items
             );
             (*monkey).borrow().starting_items.iter().for_each(|item| {
+                // Count towards inspected items
+                inspected_items
+                    .entry((*monkey).borrow().id)
+                    .and_modify(|e| *e += 1)
+                    .or_insert(1);
+
                 let mut worry_level = (*monkey).borrow().perform_op(item);
                 println!("New worry level: {}", worry_level);
 
@@ -140,14 +153,14 @@ pub fn output(input: &String) {
                         .starting_items
                         .push(worry_level)
                 }
-                // monkeys[(*monkey).borrow().id]
-                //     .borrow_mut()
-                //     .items_inspected_cnt += 1;
+                // (*monkey).borrow_mut().items_inspected_cnt += 1;
             });
-            (*monkey).borrow_mut().starting_items = vec![]
+            (*monkey).borrow_mut().starting_items = vec![];
         }
+        println!("Round i: {}\tInspected items {:?}", i, &inspected_items);
     }
-    println!("Monkeys: {:#?}", &monkeys);
+    // println!("Monkeys: {:#?}", &monkeys);
+    // println!("Inspected items {:?}", &inspected_items);
 }
 
 // Monkey's turn:
