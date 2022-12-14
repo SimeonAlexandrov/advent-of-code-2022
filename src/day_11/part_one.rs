@@ -107,12 +107,20 @@ pub fn output(input: &String) {
 
     let mut inspected_items: HashMap<usize, usize> = HashMap::new();
 
-    for i in 0..20 {
+    for i in 1..=20 {
+        println!("============");
+        for m in &monkeys {
+            println!(
+                "Monkey: {}, {:?}",
+                (*m).borrow().id,
+                (*m).borrow().starting_items
+            )
+        }
         for monkey in &monkeys {
-            inspected_items
-                .entry((*monkey).borrow().id)
-                .and_modify(|e| *e += 1)
-                .or_insert(1);
+            // inspected_items
+            //     .entry((*monkey).borrow().id)
+            //     .and_modify(|e| *e += 1)
+            //     .or_insert(0);
             println!(
                 "Monkey {} starting items before round: {:?}",
                 (*monkey).borrow().id,
@@ -126,16 +134,16 @@ pub fn output(input: &String) {
                     .or_insert(1);
 
                 let mut worry_level = (*monkey).borrow().perform_op(item);
-                println!("New worry level: {}", worry_level);
+                println!("\tNew worry level: {}", worry_level);
 
                 // Relieve stress
                 worry_level = (*monkey).borrow().relieve_worry_level(worry_level);
-                println!("New worry level after relieved stress: {}", worry_level);
+                println!("\tNew worry level after relieved stress: {}", worry_level);
 
                 // Test item
                 if (*monkey).borrow().test(worry_level) {
                     let target_id = (*monkey).borrow().true_target.unwrap();
-                    println!("Need to pass {} to monkey {:?}", worry_level, target_id);
+                    println!("\tNeed to pass {} to monkey {:?}", worry_level, target_id);
                     monkeys[target_id]
                         .borrow_mut()
                         .starting_items
@@ -143,7 +151,7 @@ pub fn output(input: &String) {
                 } else {
                     let target_id = (*monkey).borrow().false_target.unwrap();
                     println!(
-                        "Need to pass {} to monkey {:?} cause not divisible",
+                        "\tNeed to pass {} to monkey {:?} cause not divisible",
                         worry_level,
                         (*monkey).borrow().false_target.unwrap()
                     );
