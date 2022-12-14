@@ -104,44 +104,50 @@ pub fn output(input: &String) {
         }
     }
     println!("Monkeys: {:#?}", &monkeys);
-
-    for monkey in &monkeys {
-        println!(
-            "Monkey {} starting items before round: {:?}",
-            (*monkey).borrow().id,
-            (*monkey).borrow().starting_items
-        );
-        (*monkey).borrow().starting_items.iter().for_each(|item| {
-            let mut worry_level = (*monkey).borrow().perform_op(item);
-            println!("New worry level: {}", worry_level);
-
-            // Relieve stress
-            worry_level = (*monkey).borrow().relieve_worry_level(worry_level);
-            println!("New worry level after relieved stress: {}", worry_level);
-
-            // Test item
-            if (*monkey).borrow().test(worry_level) {
-                let target_id = (*monkey).borrow().true_target.unwrap();
-                println!("Need to pass {} to monkey {:?}", worry_level, target_id);
-                monkeys[target_id]
-                    .borrow_mut()
-                    .starting_items
-                    .push(worry_level)
-            }
-            let target_id = (*monkey).borrow().true_target.unwrap();
+    for i in 0..20 {
+        for monkey in &monkeys {
             println!(
-                "Need to pass {} to monkey {:?}",
-                worry_level,
-                (*monkey).borrow().false_target.unwrap()
+                "Monkey {} starting items before round: {:?}",
+                (*monkey).borrow().id,
+                (*monkey).borrow().starting_items
             );
+            (*monkey).borrow().starting_items.iter().for_each(|item| {
+                let mut worry_level = (*monkey).borrow().perform_op(item);
+                println!("New worry level: {}", worry_level);
 
-            monkeys[target_id]
-                .borrow_mut()
-                .starting_items
-                .push(worry_level)
-            // We always want to clear item from monkey inventory after we are done with it
-        });
+                // Relieve stress
+                worry_level = (*monkey).borrow().relieve_worry_level(worry_level);
+                println!("New worry level after relieved stress: {}", worry_level);
+
+                // Test item
+                if (*monkey).borrow().test(worry_level) {
+                    let target_id = (*monkey).borrow().true_target.unwrap();
+                    println!("Need to pass {} to monkey {:?}", worry_level, target_id);
+                    monkeys[target_id]
+                        .borrow_mut()
+                        .starting_items
+                        .push(worry_level)
+                } else {
+                    let target_id = (*monkey).borrow().false_target.unwrap();
+                    println!(
+                        "Need to pass {} to monkey {:?} cause not divisible",
+                        worry_level,
+                        (*monkey).borrow().false_target.unwrap()
+                    );
+
+                    monkeys[target_id]
+                        .borrow_mut()
+                        .starting_items
+                        .push(worry_level)
+                }
+                // monkeys[(*monkey).borrow().id]
+                //     .borrow_mut()
+                //     .items_inspected_cnt += 1;
+            });
+            (*monkey).borrow_mut().starting_items = vec![]
+        }
     }
+    println!("Monkeys: {:#?}", &monkeys);
 }
 
 // Monkey's turn:
